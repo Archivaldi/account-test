@@ -1,12 +1,6 @@
 const { User, RefreshToken } = require("../models");
 const jwt = require("jsonwebtoken");
-
-const generateToken = (userInfo, type) => {
-    const token = type === "access"
-        ? jwt.sign({ id: userInfo.id }, process.env.JWT_SECRET, { expiresIn: "5s" })
-        : jwt.sign({ id: userInfo.id }, process.env.JWT_REFRESH_SECRET);
-    return token;
-};
+const generateToken = require("../utils/generateToken");
 
 const userController = {
     login: async ({ body }, res) => {
@@ -17,7 +11,7 @@ const userController = {
             return;
         }
         const isValidPassword = user.checkPassword(password);
-        if (isValidPassword) {
+        if (!isValidPassword) {
             res.status(400).send({message: "Invalid password"});
             return;
         }
@@ -27,7 +21,7 @@ const userController = {
         res.status(200).send({
             accessToken,
             refreshToken,
-            userId: user.id
+            user
         });
     },
     signup: async ({ body }, res) => {
@@ -61,7 +55,7 @@ const userController = {
             return res.status(200).send({
                 accessToken: newAccessToken,
                 refreshToken: newRefreshToken,
-                userId: user.id
+                user
             });
         });
     },
