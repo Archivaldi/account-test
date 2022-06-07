@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
+import { refreshToken } from "../../utils/auth";
 
 const Login = (props) => {
     const [email, setEmail] = useState("");
@@ -14,22 +15,6 @@ const Login = (props) => {
         id === 'email' ? setEmail(value) : setPassword(value);
     };
 
-    const refreshToken = async () => {
-        try {
-            if (user) {
-                const response = await axios.post("http://localhost:8080/user/refresh", { refreshToken: user.refreshToken });
-                setUser({
-                    ...user,
-                    accessToken: response.data.accessToken,
-                    refreshToken: response.data.refreshToken
-                })
-                return response.data;
-            }
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
     const axiosJWT = axios.create();
 
     axiosJWT.interceptors.request.use(
@@ -37,7 +22,7 @@ const Login = (props) => {
             const currentDate = new Date();
             const decodedToken = jwt_decode(user.accessToken);
             if (decodedToken.exp * 1000 < currentDate.getTime()) {
-                const data = await refreshToken();
+                const data = await refreshToken(user, setUser);
                 config.headers.authorization = `Bearer ${data.accessToken}`
             };
             return config;

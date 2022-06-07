@@ -11,7 +11,6 @@ const generateToken = (userInfo, type) => {
 const userController = {
     login: async ({ body }, res) => {
         const { email, password } = body;
-        console.log(body);
         const user = await User.findOne({ where: { email, password } });
         if (user) {
             const accessToken = generateToken(user, 'access');
