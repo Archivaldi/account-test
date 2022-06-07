@@ -11,22 +11,24 @@ const generateToken = (userInfo, type) => {
 const userController = {
     login: async ({ body }, res) => {
         const { email, password } = body;
-        const user = await User.findOne({ where: { email, password } });
-        if (user) {
-            const accessToken = generateToken(user, 'access');
-            const refreshToken = generateToken(user, 'refresh');
-            await RefreshToken.create({ refreshToken });
-            res.status(200).send({
-                accessToken,
-                refreshToken,
-                userId: user.id
-            });
-
-        } else {
-            res.status(404).send({
-                message: "User with these credentials not found"
-            });
+        const user = await User.findOne({ where: { email } });
+        if (!user) {
+            res.status(404).send({ message: "Invalid email" });
+            return;
         }
+        const isValidPassword = user.checkPassword(password);
+        if (isValidPassword) {
+            res.status(400).send({message: "Invalid password"});
+            return;
+        }
+        const accessToken = generateToken(user, 'access');
+        const refreshToken = generateToken(user, 'refresh');
+        await RefreshToken.create({ refreshToken });
+        res.status(200).send({
+            accessToken,
+            refreshToken,
+            userId: user.id
+        });
     },
     signup: async ({ body }, res) => {
         try {
@@ -41,7 +43,7 @@ const userController = {
                 user
             });
         } catch (err) {
-            res.status(500).send({message: "Something went wrong"});
+            res.status(500).send({ message: "Something went wrong" });
         }
     },
     refresh: async ({ body }, res) => {
