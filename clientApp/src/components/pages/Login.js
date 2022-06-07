@@ -8,13 +8,7 @@ const Login = (props) => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState(undefined);
     const [user, setUser] = useState(null);
-
-    const handleChange = (e) => {
-        const value = e.target.value;
-        const id = e.target.id;
-        id === 'email' ? setEmail(value) : setPassword(value);
-    };
-
+    
     const axiosJWT = axios.create();
 
     axiosJWT.interceptors.request.use(
@@ -30,6 +24,12 @@ const Login = (props) => {
             return Promise.reject(error);
         }
     );
+
+    const handleChange = (e) => {
+        const value = e.target.value;
+        const id = e.target.id;
+        id === 'email' ? setEmail(value) : setPassword(value);
+    };
 
     const submit = async () => {
         if (email && password) {

@@ -28,6 +28,22 @@ const userController = {
             });
         }
     },
+    signup: async ({ body }, res) => {
+        try {
+            const { email, password } = body;
+            const user = await User.create({ email, password });
+            const accessToken = generateToken(user, 'access');
+            const refreshToken = generateToken(user, 'refresh');
+            await RefreshToken.create({ refreshToken });
+            res.status(200).send({
+                accessToken,
+                refreshToken,
+                user
+            });
+        } catch (err) {
+            res.status(500).send({message: "Something went wrong"});
+        }
+    },
     refresh: async ({ body }, res) => {
         //get the refresh token from the user
         const { refreshToken } = body;
@@ -50,8 +66,8 @@ const userController = {
 
     logout: async ({ body }, res) => {
         const { refreshToken } = body;
-        await RefreshToken.destroy({where: {refreshToken}});
-        res.status(200).send({message: "Logged out successfully"});
+        await RefreshToken.destroy({ where: { refreshToken } });
+        res.status(200).send({ message: "Logged out successfully" });
     },
 
     getUsers: async (req, res) => {
