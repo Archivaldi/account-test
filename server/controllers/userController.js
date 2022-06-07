@@ -2,20 +2,21 @@ const { User, RefreshToken } = require("../models");
 const jwt = require("jsonwebtoken");
 
 const generateToken = (userInfo, type) => {
-    const token = type === "access" 
-    ? jwt.sign({ id: userInfo.id }, process.env.JWT_SECRET, { expiresIn: "15m" })
-    : jwt.sign({id: userInfo.id}, process.env.JWT_REFRESH_SECRET);
+    const token = type === "access"
+        ? jwt.sign({ id: userInfo.id }, process.env.JWT_SECRET, { expiresIn: "24h" })
+        : jwt.sign({ id: userInfo.id }, process.env.JWT_REFRESH_SECRET);
     return token;
 };
 
 const userController = {
     login: async ({ body }, res) => {
         const { email, password } = body;
+        console.log(body);
         const user = await User.findOne({ where: { email, password } });
         if (user) {
             const accessToken = generateToken(user, 'access');
             const refreshToken = generateToken(user, 'refresh');
-            await RefreshToken.create({refreshToken});
+            await RefreshToken.create({ refreshToken });
             res.status(200).send({
                 accessToken,
                 refreshToken,
@@ -31,15 +32,15 @@ const userController = {
     refresh: async ({ body }, res) => {
         //get the refresh token from the user
         const { refreshToken } = body;
-        if (!refreshToken) return res.status(401).send({message: 'Not Authenticated'});
-        const tokenExists = await RefreshToken.findOne({where: {refreshToken}});
-        if (!tokenExists) return res.status(403).send({message: "Refresh Token is not valid"});
-        jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async  (err, user) => {
+        if (!refreshToken) return res.status(401).send({ message: 'Not Authenticated' });
+        const tokenExists = await RefreshToken.findOne({ where: { refreshToken } });
+        if (!tokenExists) return res.status(403).send({ message: "Refresh Token is not valid" });
+        jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err, user) => {
             if (err) console.log(err);
-            await RefreshToken.destroy({where: {refreshToken}});
+            await RefreshToken.destroy({ where: { refreshToken } });
             const newAccessToken = generateToken(user, 'access');
             const newRefreshToken = generateToken(user, 'refresh');
-            await RefreshToken.create({refreshToken: newRefreshToken});
+            await RefreshToken.create({ refreshToken: newRefreshToken });
             return res.status(200).send({
                 accessToken: newAccessToken,
                 refreshToken: newRefreshToken,
@@ -47,6 +48,13 @@ const userController = {
             });
         });
     },
+
+    logout: async ({ body }, res) => {
+        const { refreshToken } = body;
+        await RefreshToken.destroy({where: {refreshToken}});
+        res.status(200).send({message: "Logged out successfully"});
+    },
+
     getUsers: async (req, res) => {
         const users = await User.findAll();
         res.status(200).send(users);
