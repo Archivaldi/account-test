@@ -23,3 +23,12 @@ export const InputContainer = styled.div`
     height: 20%;
     width: 100%;
 `;
+
+export const ButtonContainer = styled.div`
+    margin: 1rem 0 2rem 0;
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+`;

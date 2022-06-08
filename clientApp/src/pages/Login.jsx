@@ -4,9 +4,10 @@ import axios from "axios";
 import styled from "styled-components";
 import { FaGoogle } from "react-icons/fa"
 import { refreshToken } from "../utils/auth";
-import { MainContainer, InputContainer } from "../styles/Containers";
+import { MainContainer, InputContainer, ButtonContainer } from "../styles/Containers";
 import { WelcomeText } from "../styles/WelcomeText";
 import Input from "../components/Input";
+import Button from "../components/Button";
 
 const Login = (props) => {
     const [email, setEmail] = useState("");
@@ -69,6 +70,10 @@ const Login = (props) => {
                 <Input type="text" placeholder="Email" />
                 <Input type="password" placeholder="Password" />
             </InputContainer>
+            <ButtonContainer>
+                <Button content={"Log In"} />
+                <Button content={"Sign Up"} />
+            </ButtonContainer>
         </MainContainer>
         // <div>
         //     <label>Email: </label>
