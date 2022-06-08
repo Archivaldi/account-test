@@ -32,3 +32,10 @@ export const ButtonContainer = styled.div`
     align-items: center;
     justify-content: space-around;
 `;
+
+export const IconContainer = styled.div`
+    display: flex;
+    justify-content: space-evenly;
+    margin: 2rem 0 3rem 0;
+    width: 80%;
+`;

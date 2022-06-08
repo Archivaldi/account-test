@@ -15,7 +15,7 @@ const StyledInput = styled.input`
     padding: 1rem;
     border: none;
     outline: none;
-    color: #3c354e;
+    color: white;
     font-size: 1rem;
     font-weight: bold;
     &:focus {
@@ -25,7 +25,7 @@ const StyledInput = styled.input`
         border-radius: 2rem;
     };
     &::placeholder {
-        color: #b9abe099;
+        color: white;
         font-weight: 100;
         font-size: 1rem;
     }

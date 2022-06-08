@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
-import styled from "styled-components";
-import { FaGoogle } from "react-icons/fa"
 import { refreshToken } from "../utils/auth";
-import { MainContainer, InputContainer, ButtonContainer } from "../styles/Containers";
-import { WelcomeText } from "../styles/WelcomeText";
+import { MainContainer, InputContainer, ButtonContainer, IconContainer } from "../styles/Containers";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import Icon from "../components/Icon";
+import { Hr, LoginWith, WelcomeText, ForgotPassword } from "../styles/Helpers";
 
 const Login = (props) => {
     const [email, setEmail] = useState("");
@@ -74,6 +73,12 @@ const Login = (props) => {
                 <Button content={"Log In"} />
                 <Button content={"Sign Up"} />
             </ButtonContainer>
+            <LoginWith>or Login With</LoginWith>
+            <Hr />
+            <IconContainer>
+                <Icon />
+            </IconContainer>
+            <ForgotPassword>Forgot password ?</ForgotPassword>
         </MainContainer>
         // <div>
         //     <label>Email: </label>
