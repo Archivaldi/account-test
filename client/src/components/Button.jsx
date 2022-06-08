@@ -1,8 +1,9 @@
 import styled from "styled-components";
 
-const Button = ({content}) => {
+const Button = ({submit,content}) => {
+    
     return (
-        <StyledButton className="btn" >{content}</StyledButton>
+        <StyledButton onClick={submit} className="btn" >{content}</StyledButton>
     )
 };
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
 import { refreshToken } from "../utils/auth";
@@ -8,12 +8,13 @@ import Button from "../components/Button";
 import Icon from "../components/Icon";
 import { Hr, LoginWith, WelcomeText, ForgotPassword } from "../styles/Helpers";
 
+axios.defaults.withCredentials = true;
+
 const Login = (props) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(undefined);
     const [user, setUser] = useState(null);
-
     const axiosJWT = axios.create();
 
     axiosJWT.interceptors.request.use(
@@ -30,11 +31,24 @@ const Login = (props) => {
         }
     );
 
-    const handleChange = (e) => {
-        const value = e.target.value;
-        const id = e.target.id;
-        id === 'email' ? setEmail(value) : setPassword(value);
-    };
+    useEffect(() => {
+        let loading = true;
+        if (loading) {
+            console.log("Loading...");
+            const persistLogin = async () => {
+                try {
+                     await refreshToken(user, setUser, setError);
+                } catch (err) {
+                    console.log(err);
+                }
+            };
+            persistLogin();
+        };
+        return () => {
+            loading = false;
+        }
+
+    }, [])
 
     const submit = async () => {
         if (email && password) {
@@ -49,13 +63,17 @@ const Login = (props) => {
     const logout = async () => {
         try {
             if (user) {
-                await axiosJWT.post("http://localhost:8080/user/logout", { refreshToken: user.refreshToken }, {
+                const response = await axiosJWT.post("http://localhost:8080/user/logout", { refreshToken: user.refreshToken }, {
                     headers: {
                         "Content-Type": "application/json",
                         'authorization': `Bearer ${user.accessToken}`
                     },
                 });
-                setUser(null);
+                if (response.data.error) {
+                    console.log(response.data.error);
+                } else {
+                    setUser(null);
+                };
             }
         } catch (e) {
             console.log(e);
@@ -66,11 +84,11 @@ const Login = (props) => {
         <MainContainer>
             <WelcomeText>Welcome</WelcomeText>
             <InputContainer>
-                <Input type="text" placeholder="Email" />
-                <Input type="password" placeholder="Password" />
+                <Input setEmail={setEmail} setPassword={setPassword} value={email} id="email" type="text" placeholder="Email" />
+                <Input setEmail={setEmail} setPassword={setPassword} value={password} id="password" type="password" placeholder="Password" />
             </InputContainer>
             <ButtonContainer className="buttonContainer">
-                <Button content={"Log In"} />
+                <Button submit={submit} content={"Log In"} />
                 <Button content={"Sign Up"} />
             </ButtonContainer>
             <LoginWith>or Login With</LoginWith>
@@ -79,21 +97,11 @@ const Login = (props) => {
                 <Icon />
             </IconContainer>
             <ForgotPassword>Forgot password ?</ForgotPassword>
+            {user && <div>
+                {JSON.stringify(user, null, 2)}
+            </div>}
+            <Button submit={logout} content={"Log out"} />
         </MainContainer>
-        // <div>
-        //     <label>Email: </label>
-        //     <input value={email} id="email" onChange={(e) => handleChange(e)} />
-        //     <label>Password: </label>
-        //     <input value={password} id="password" onChange={(e) => handleChange(e)} />
-        //     <button onClick={submit}>Submit</button>
-        //     <button onClick={logout}>Logout</button>
-        //     {
-        //         user &&
-        //         <div>
-        //             {JSON.stringify(user, null, 2)}
-        //         </div>
-        //     }
-        // </div>
     );
 };
 

@@ -86,6 +86,7 @@ export const MainContainer = styled.div`
     @media only screen and (min-width: 611px) {
         width: 60vw;
         height: 90vh;
+        letter-spacing: 0.3rem;
     }
 
     @media only screen and (min-width: 860px) {

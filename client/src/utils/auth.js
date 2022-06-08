@@ -1,14 +1,20 @@
 import axios from "axios";
+axios.defaults.withCredentials = true;
 
-export const refreshToken = async (user, setUser) => {
+export const refreshToken = async (user, setUser, setError) => {
     try {
-            const response = await axios.post("http://localhost:8080/user/refresh", { refreshToken: user.refreshToken });
+        const response = await axios.post("http://localhost:8080/user/refresh", { withCredentials: true });
+        console.log(response);
+        if (response.data.success) {
             setUser({
-                ...user,
-                accessToken: response.data.accessToken,
-                refreshToken: response.data.refreshToken
-            })
+                email: response.data.user.email,
+                id: response.data.user.id,
+                accessToken: response.data.accessToken
+            });
             return response.data;
+        } else {
+            setError(response.data.error);
+        };
     } catch (e) {
         console.log(e);
     }
