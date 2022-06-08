@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
-import { refreshToken } from "../../utils/auth";
+import styled from "styled-components";
+import { FaGoogle } from "react-icons/fa"
+import { refreshToken } from "../utils/auth";
+import { MainContainer } from "../components/Containers";
+import { WelcomeText } from "../components/WelcomeText";
 
 const Login = (props) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(undefined);
     const [user, setUser] = useState(null);
-    
+
     const axiosJWT = axios.create();
 
     axiosJWT.interceptors.request.use(
@@ -58,20 +62,23 @@ const Login = (props) => {
     };
 
     return (
-        <div>
-            <label>Email: </label>
-            <input value={email} id="email" onChange={(e) => handleChange(e)} />
-            <label>Password: </label>
-            <input value={password} id="password" onChange={(e) => handleChange(e)} />
-            <button onClick={submit}>Submit</button>
-            <button onClick={logout}>Logout</button>
-            {
-                user &&
-                <div>
-                    {JSON.stringify(user, null, 2)}
-                </div>
-            }
-        </div>
+        <MainContainer>
+            <WelcomeText>Welcome</WelcomeText>
+        </MainContainer>
+        // <div>
+        //     <label>Email: </label>
+        //     <input value={email} id="email" onChange={(e) => handleChange(e)} />
+        //     <label>Password: </label>
+        //     <input value={password} id="password" onChange={(e) => handleChange(e)} />
+        //     <button onClick={submit}>Submit</button>
+        //     <button onClick={logout}>Logout</button>
+        //     {
+        //         user &&
+        //         <div>
+        //             {JSON.stringify(user, null, 2)}
+        //         </div>
+        //     }
+        // </div>
     );
 };
 
