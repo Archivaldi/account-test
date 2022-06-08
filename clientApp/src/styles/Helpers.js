@@ -1,8 +1,7 @@
 import styled from "styled-components";
 
 export const LoginWith = styled.h5`
-    cursor: pointer;
-
+    cursor: default;
 `;
 
 export const Hr = styled.hr`
@@ -21,4 +20,5 @@ export const WelcomeText = styled.h2`
 export const ForgotPassword = styled.h4`
     cursor: pointer;
     text-transform: uppercase;
+    margin-bottom: 1rem;
 `;

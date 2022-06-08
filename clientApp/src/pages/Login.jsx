@@ -69,7 +69,7 @@ const Login = (props) => {
                 <Input type="text" placeholder="Email" />
                 <Input type="password" placeholder="Password" />
             </InputContainer>
-            <ButtonContainer>
+            <ButtonContainer className="buttonContainer">
                 <Button content={"Log In"} />
                 <Button content={"Sign Up"} />
             </ButtonContainer>

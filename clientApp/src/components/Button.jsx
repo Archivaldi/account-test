@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const Button = ({content}) => {
     return (
-        <StyledButton>{content}</StyledButton>
+        <StyledButton className="btn" >{content}</StyledButton>
     )
 };
 
