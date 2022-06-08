@@ -14,3 +14,12 @@ export const MainContainer = styled.div`
     text-transform: uppercase;
     letter-spacing: 0.4rem;
 `;
+
+export const InputContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 20%;
+    width: 100%;
+`;
