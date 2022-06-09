@@ -7,7 +7,8 @@ import Icon from "../components/Icon";
 import { Hr, LoginWith, WelcomeText, ForgotPassword } from "../styles/Helpers";
 import SwitchMode from "../components/SwitchMode";
 import UserContext from "../contexts/UserContext";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+
 
 axios.defaults.withCredentials = true;
 
@@ -19,7 +20,7 @@ const Login = (props) => {
     const [mode, setMode] = useState("login");
     const { value, setValue } = useContext(UserContext);
     const [name, setName] = useState("");
-    const [nameFromGoogle, setNameFromGoogle] = useState(false);
+    const [avatar, setAvatar] = useState();
 
 
     const submit = async (info) => {
@@ -34,8 +35,14 @@ const Login = (props) => {
                     setError("Email and Password are required to log in");
                 }
             } else {
-                if (email && password && name) {
-                    const response = await axios.post("http://localhost:8080/user/signup", { email, password, name });
+                if (email && password && name && avatar) {
+
+                    const formData = new FormData();
+                    formData.append('file', avatar);
+                    formData.append("name", avatar.name);
+
+                    console.log(formData);
+                    const response = await axios.post("http://localhost:8080/user/signup", { email, password, name, formData });
                     setValue(response.data);
                     navigate("/");
                 } else {
@@ -52,25 +59,32 @@ const Login = (props) => {
             const response = await axios.post("http://localhost:3000/user/google-login", {
                 token: data.access_token
             });
-
+            console.log(response.data);
             setValue(response.data);
             navigate("/");
         },
         onError: err => console.log(err)
     });
 
+
     return (
         <MainContainer>
             <WelcomeText>Welcome</WelcomeText>
-
-            <InputContainer>
-                <Input setEmail={setEmail} setPassword={setPassword} value={email} id="email" type="text" placeholder="Email" />
-                <Input setEmail={setEmail} setPassword={setPassword} value={password} id="password" type="password" placeholder="Password" />
-                {
-                    mode === "signup" &&
-                    <Input setName={setName} value={name} id="name" type="text" placeholder="Full Name" />
-                }
-            </InputContainer>
+            {
+                mode === "login" ? (
+                    <InputContainer>
+                        <Input setEmail={setEmail} value={email} id="email" type="text" placeholder="Email" />
+                        <Input setPassword={setPassword} value={password} id="password" type="password" placeholder="Password" />
+                    </InputContainer>
+                ) : (
+                    <InputContainer style={{ height: "33%" }}>
+                        <Input setEmail={setEmail} value={email} id="email" type="text" placeholder="Email" />
+                        <Input setPassword={setPassword} value={password} id="password" type="password" placeholder="Password" />
+                        <Input setName={setName} value={name} id="name" type="text" placeholder="Full Name" />
+                        <Input setAvatar={setAvatar} id="file" type="file" placeholder="Choose Avatar" />
+                    </InputContainer>
+                )
+            }
             <ButtonContainer>
                 <SwitchMode mode={mode} setMode={setMode} submit={submit} />
             </ButtonContainer>

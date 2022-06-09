@@ -6,6 +6,7 @@ const router = require("./routes");
 const cookieParser = require("cookie-parser");
 const cors = require('cors');
 const PORT = process.env.PORT || 8080;
+let upload = require('express-fileupload');
 
 app.use(cors({
     credentials: true,
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(headers);
 app.use(cookieParser());
+app.use(upload())
 app.use(router);
 
 

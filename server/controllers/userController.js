@@ -1,20 +1,19 @@
 const { User, RefreshToken } = require("../models");
 const jwt = require("jsonwebtoken");
-const { OAuth2Client } = require("google-auth-library");
 const generateToken = require("../utils/generateToken");
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const axios = require("axios");
+const cloudinary = require('cloudinary').v2;
+
 
 const userController = {
     googleLogin: async ({ body, res }) => {
         const { token } = body;
         try {
-            const userInfo = await client.getTokenInfo(token);
-            console.log(token);
-            console.log(userInfo);
-            const {email} = userInfo;
-            let user = await User.findOne({ where: { email } });
+            const userInfo = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${token}`);
+            const {email, name, picture} = userInfo.data;
+            let user = await User.findOne({ where: { email, picture, name } });
             if (!user) {
-                user = await User.create({email, isGoogleAccount: true});
+                user = await User.create({email, name, picture});
             }
             const accessToken = generateToken(user, 'access');
             const refreshToken = generateToken(user, 'refresh');
@@ -68,10 +67,12 @@ const userController = {
                 user
             });
     },
-    signup: async ({ body }, res) => {
+    signup: async ({ body, files }, res) => {
         try {
-            const { email, password } = body;
-            const user = await User.create({ email, password });
+            const { email, password, name } = body;
+            console.log(body);
+            console.log(files);
+            const user = await User.create({ email, password, name, avatar });
             const accessToken = generateToken(user, 'access');
             const refreshToken = generateToken(user, 'refresh');
             await RefreshToken.create({ refreshToken });

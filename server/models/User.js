@@ -1,4 +1,4 @@
-const { Model, INTEGER, STRING, BOOLEAN } = require('sequelize');
+const { Model, INTEGER, STRING, TEXT } = require('sequelize');
 const sequelize = require('../config/connection');
 const bcrypt = require('bcrypt');
 
@@ -34,10 +34,15 @@ User.init(
                 len: [6]
             }
         },
-        isGoogleAccount: {
-            type: BOOLEAN,
-            defaultValue: false
+        name: {
+            type: STRING,
+            allowNull: false
+        },
+        picture: {
+            type: TEXT,
+            allowNull: false
         }
+        
 
     },
     {

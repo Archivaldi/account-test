@@ -1,14 +1,16 @@
 import styled from "styled-components";
 
-const Input = ({setEmail, setPassword, setName, type, placeholder, id }) => {
+const Input = ({setEmail, setPassword, setName, type, placeholder, setAvatar, id }) => {
     const handleChange = (e) => {
         const value = e.target.value;
         if (id === 'email') {
             setEmail(value);
         } else if (id === 'password') {
             setPassword(value);
-        } else {
+        } else if (id === "name")  {
             setName(value);
+        } else {
+            setAvatar(e.target.files[0])
         }
     };
     return (

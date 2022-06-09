@@ -4,12 +4,14 @@ axios.defaults.withCredentials = true;
 export const refreshToken = async (setUser, setError) => {
     try {
         const response = await axios.post("http://localhost:8080/user/refresh", { withCredentials: true });
-        console.log(response.data)
             setUser({
-                email: response.data.user.email,
-                id: response.data.user.id,
-                isGoogleAccount: response.data.user.isGoogleAccount,
-                accessToken: response.data.accessToken
+                accessToken: response.data.accessToken,
+                user: {
+                    id: response.data.user.id,
+                    email: response.data.user.email,
+                    picture: response.data.user.picture,
+                    name: response.data.user.name,
+                }
             });
             return response.data;
     } catch (e) {
