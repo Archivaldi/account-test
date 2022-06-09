@@ -2,7 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import UserContext from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom"
 import { refreshToken } from "../utils/auth";
-import CustomAxios from "../utils/axiosJWT";
+import axios from "axios";
+import jwt_decode from "jwt-decode";
+import Button from "../components/Button";
+
+axios.defaults.withCredentials = true;
 
 
 const Index = (props) => {
@@ -10,24 +14,33 @@ const Index = (props) => {
     const { value, setValue } = useContext(UserContext);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    console.log("The context now: ", value)
+
+    const axiosJWT = axios.create();
+
+    axiosJWT.interceptors.request.use(
+        async (config) => {
+            const currentDate = new Date();
+            const decodedToken = jwt_decode(value.accessToken);
+            if (decodedToken.exp * 1000 < currentDate.getTime()) {
+                const data = await refreshToken(setValue, setError);
+                config.headers.authorization = `Bearer ${data.accessToken}`
+            };
+            return config;
+        }, (error) => {
+            return Promise.reject(error);
+        }
+    );
 
     useEffect(() => {
         let loading = true;
         if (loading) {
             const persistLogin = async () => {
                 try {
-                    const response = await refreshToken(value, setValue, setError);
+                    const response = await refreshToken(setValue, setError);
                     if (!response.success) {
-                        console.log("Here");
                         navigate("/login");
-                    } else {
-                        setValue({
-                            id: response.data.user.id,
-                            email: response.data.user.email,
-                            isGoogleAccount: response.data.user.isGoogleAccount,
-                            accessToken: response.data.accessToken
-                        });
-                    }
+                    };
                 } catch (err) {
                     console.log(err);
                 }
@@ -43,26 +56,25 @@ const Index = (props) => {
     const logout = async () => {
         try {
             if (value) {
-                const response = await CustomAxios(value, setValue).post("http://localhost:8080/user/logout", {
+                console.log(value.accessToken);
+                const response = await axiosJWT.post("http://localhost:8080/user/logout", {},{
                     headers: {
                         "Content-Type": "application/json",
                         'authorization': `Bearer ${value.accessToken}`
                     },
                 });
-                if (response.data.error) {
-                    console.log(response.data.error);
-                } else {
-                    setValue(null);
-                };
+                setValue(null);
+                navigate("/login");
             }
         } catch (e) {
             console.log(e);
+            setError(e.response.data.error);
         };
     };
 
     return (
         <div>
-            INDEX PAGE
+            <Button content="Log Out" submit={logout} />
         </div>
     )
 };

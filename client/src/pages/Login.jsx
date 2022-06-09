@@ -7,14 +7,15 @@ import Icon from "../components/Icon";
 import { Hr, LoginWith, WelcomeText, ForgotPassword } from "../styles/Helpers";
 import SwitchMode from "../components/SwitchMode";
 import UserContext from "../contexts/UserContext";
+import { useNavigate } from "react-router-dom"
 
 axios.defaults.withCredentials = true;
 
 const Login = (props) => {
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(undefined);
-    const [user, setUser] = useState(null);
     const [mode, setMode] = useState("login");
     const {value, setValue} = useContext(UserContext);
 
@@ -22,7 +23,8 @@ const Login = (props) => {
     const submit = async (info) => {
         if (email && password) {
             const response = await axios.post("http://localhost:8080/user/login", { email, password });
-            setUser(response.data);
+            setValue(response.data);
+            navigate("/");
         } else {
             console.log("Email and Password are required to log in")
             setError("Email and Password are required to log in");
@@ -34,8 +36,8 @@ const Login = (props) => {
             const response = await axios.post("http://localhost:3000/user/google-login", {
                 token: data.access_token
             });
-            setUser(response.data);
-
+            setValue(response.data);
+            navigate("/");
         },
         onError: err => console.log(err)
     })
