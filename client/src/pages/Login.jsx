@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
+import { GoogleLogin } from 'react-google-login';
 import { refreshToken } from "../utils/auth";
 import { MainContainer, InputContainer, ButtonContainer, IconContainer } from "../styles/Containers";
 import Input from "../components/Input";
@@ -94,6 +95,7 @@ const Login = (props) => {
             <LoginWith>or Login With</LoginWith>
             <Hr />
             <IconContainer>
+
                 <Icon />
             </IconContainer>
             <ForgotPassword>Forgot password ?</ForgotPassword>
