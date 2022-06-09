@@ -25,7 +25,9 @@ const Index = (props) => {
             if (decodedToken.exp * 1000 < currentDate.getTime()) {
                 const data = await refreshToken(setValue, setError);
                 config.headers.authorization = `Bearer ${data.accessToken}`
-            };
+            } else {
+                config.headers.authorization = `Bearer ${value.accessToken}`
+            }
             return config;
         }, (error) => {
             return Promise.reject(error);
@@ -56,13 +58,7 @@ const Index = (props) => {
     const logout = async () => {
         try {
             if (value) {
-                console.log(value.accessToken);
-                const response = await axiosJWT.post("http://localhost:8080/user/logout", {},{
-                    headers: {
-                        "Content-Type": "application/json",
-                        'authorization': `Bearer ${value.accessToken}`
-                    },
-                });
+                const response = await axiosJWT.post("http://localhost:8080/user/logout");
                 setValue(null);
                 navigate("/login");
             }

@@ -14,10 +14,10 @@ export const Hr = styled.hr`
     backdrop-filter: blur(25px);
 `; 
 
-export const WelcomeText = styled.h2`
+export const WelcomeText = styled.h1`
     margin: 3rem 0 2rem 0;
 `;
-export const ForgotPassword = styled.h4`
+export const ForgotPassword = styled.h3`
     cursor: pointer;
     text-transform: uppercase;
     margin-bottom: 1rem;

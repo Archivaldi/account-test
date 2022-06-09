@@ -1,9 +1,15 @@
 import styled from "styled-components";
 
-const Input = ({setEmail, setPassword,  type, placeholder, id }) => {
+const Input = ({setEmail, setPassword, setName, type, placeholder, id }) => {
     const handleChange = (e) => {
         const value = e.target.value;
-        id === 'email' ? setEmail(value) : setPassword(value);
+        if (id === 'email') {
+            setEmail(value);
+        } else if (id === 'password') {
+            setPassword(value);
+        } else {
+            setName(value);
+        }
     };
     return (
         <StyledInput onChange={(e) => handleChange(e)} type={type} placeholder={placeholder} />

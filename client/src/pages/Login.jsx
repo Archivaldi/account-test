@@ -17,42 +17,64 @@ const Login = (props) => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState(undefined);
     const [mode, setMode] = useState("login");
-    const {value, setValue} = useContext(UserContext);
+    const { value, setValue } = useContext(UserContext);
+    const [name, setName] = useState("");
+    const [nameFromGoogle, setNameFromGoogle] = useState(false);
 
 
     const submit = async (info) => {
-        if (email && password) {
-            const response = await axios.post("http://localhost:8080/user/login", { email, password });
-            setValue(response.data);
-            navigate("/");
-        } else {
-            console.log("Email and Password are required to log in")
-            setError("Email and Password are required to log in");
-        }
+        try {
+            if (mode === 'login') {
+                if (email && password) {
+                    const response = await axios.post("http://localhost:8080/user/login", { email, password });
+                    setValue(response.data);
+                    navigate("/");
+                } else {
+                    console.log("Email and Password are required to log in")
+                    setError("Email and Password are required to log in");
+                }
+            } else {
+                if (email && password && name) {
+                    const response = await axios.post("http://localhost:8080/user/signup", { email, password, name });
+                    setValue(response.data);
+                    navigate("/");
+                } else {
+                    setError("Please fill out all fields");
+                }
+            }
+        } catch (e) {
+            setError(e.response.data.error);
+        };
     };
 
     const loginWithGoogle = useGoogleLogin({
-        onSuccess: async data => {
+        onSuccess: async (data) => {
             const response = await axios.post("http://localhost:3000/user/google-login", {
                 token: data.access_token
             });
+
             setValue(response.data);
             navigate("/");
         },
         onError: err => console.log(err)
-    })
+    });
 
     return (
         <MainContainer>
             <WelcomeText>Welcome</WelcomeText>
+
             <InputContainer>
                 <Input setEmail={setEmail} setPassword={setPassword} value={email} id="email" type="text" placeholder="Email" />
                 <Input setEmail={setEmail} setPassword={setPassword} value={password} id="password" type="password" placeholder="Password" />
+                {
+                    mode === "signup" &&
+                    <Input setName={setName} value={name} id="name" type="text" placeholder="Full Name" />
+                }
             </InputContainer>
             <ButtonContainer>
-                <SwitchMode mode={mode} setMode={setMode} submit={submit}/>
+                <SwitchMode mode={mode} setMode={setMode} submit={submit} />
             </ButtonContainer>
-            <LoginWith>or Login With</LoginWith>
+            <LoginWith>or {mode === "login" ? "Login" : "Sign Up"} With</LoginWith>
             <Hr />
             <IconContainer>
                 <Icon>

@@ -9,7 +9,7 @@ const Button = ({submit,content}) => {
 
 const StyledButton = styled.button`
     background: #9bb33355;
-    width: 45%;
+    width: 100%;
     border-radius: 2rem;
     text-transform: uppercase;
     letter-spacing: 0.2rem;
@@ -17,7 +17,6 @@ const StyledButton = styled.button`
     border: none;
     color: white;
     cursor: pointer;
-
 `;
 
 export default Button;

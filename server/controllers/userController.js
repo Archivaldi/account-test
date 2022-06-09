@@ -8,7 +8,10 @@ const userController = {
     googleLogin: async ({ body, res }) => {
         const { token } = body;
         try {
-            const { email } = await client.getTokenInfo(token);
+            const userInfo = await client.getTokenInfo(token);
+            console.log(token);
+            console.log(userInfo);
+            const {email} = userInfo;
             let user = await User.findOne({ where: { email } });
             if (!user) {
                 user = await User.create({email, isGoogleAccount: true});
@@ -27,7 +30,11 @@ const userController = {
                 });
         } catch (err) {
             console.log(err);
-        }
+            res.status(err.status).send({
+                success: false,
+                error: err.data.error
+            });
+        };
     },
 
     login: async ({ body }, res) => {
