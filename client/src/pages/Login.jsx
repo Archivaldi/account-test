@@ -8,6 +8,7 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 import Icon from "../components/Icon";
 import { Hr, LoginWith, WelcomeText, ForgotPassword } from "../styles/Helpers";
+import SwitchMode from "../components/SwitchMode";
 
 axios.defaults.withCredentials = true;
 
@@ -17,6 +18,7 @@ const Login = (props) => {
     const [error, setError] = useState(undefined);
     const [user, setUser] = useState(null);
     const axiosJWT = axios.create();
+    const [mode, setMode] = useState("login");
 
     axiosJWT.interceptors.request.use(
         async (config) => {
@@ -98,9 +100,8 @@ const Login = (props) => {
                 <Input setEmail={setEmail} setPassword={setPassword} value={email} id="email" type="text" placeholder="Email" />
                 <Input setEmail={setEmail} setPassword={setPassword} value={password} id="password" type="password" placeholder="Password" />
             </InputContainer>
-            <ButtonContainer className="buttonContainer">
-                <Button submit={submit} content={"Log In"} />
-                <Button content={"Sign Up"} />
+            <ButtonContainer>
+                <SwitchMode mode={mode} setMode={setMode} submit={submit}/>
             </ButtonContainer>
             <LoginWith>or Login With</LoginWith>
             <Hr />
@@ -116,16 +117,6 @@ const Login = (props) => {
                 </Icon>
             </IconContainer>
             <ForgotPassword>Forgot password ?</ForgotPassword>
-            {user && <div>
-                {
-                    <div>
-                        <p style={{display: 'block'}}>{user.email}</p>
-                        <p style={{display: 'block'}}>{user.id}</p>
-                        <p style={{display: 'block'}}>{user.accessToken}</p>
-                    </div>
-                }
-            </div>}
-            <Button submit={logout} content={"Log out"} />
         </MainContainer>
     );
 };

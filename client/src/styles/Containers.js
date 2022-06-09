@@ -19,15 +19,6 @@ export const MainContainer = styled.div`
         height: 95vh;
         letter-spacing: 0.1rem;
 
-        .buttonContainer {
-            flex-direction: column;
-        };
-
-        .btn {
-            width: 100%;
-            margin: 0.5rem;
-        }
-
         hr {
             margin-bottom: 0.3rem;
         }
@@ -42,15 +33,6 @@ export const MainContainer = styled.div`
         height: 95vh;
         letter-spacing: 0.1rem;
 
-        .buttonContainer {
-            flex-direction: column;
-        };
-
-        .btn {
-            width: 100%;
-            margin: 0.5rem;
-        }
-
         h4 {
             font-size: small;
         }
@@ -59,28 +41,11 @@ export const MainContainer = styled.div`
     @media only screen and (min-width: 411px) {
         width: 80vw;
         height: 90vh;
-
-        .buttonContainer {
-            flex-direction: column;
-        };
-
-        .btn {
-            width: 100%;
-            margin: 0.5rem;
-        }
     }
 
     @media only screen and (min-width: 470px) {
         width: 80vw;
         height: 95vh;
-
-        .buttonContainer {
-            flex-direction: row;
-        };
-
-        .btn {
-            width: 45%;
-        }
     }
 
     @media only screen and (min-width: 611px) {
@@ -113,9 +78,8 @@ export const ButtonContainer = styled.div`
     margin: 1rem 0 2rem 0;
     width: 80%;
     display: flex;
-    flex-direction: row;
     align-items: center;
-    justify-content: space-around;
+    justify-content: center;
 `;
 
 export const IconContainer = styled.div`
