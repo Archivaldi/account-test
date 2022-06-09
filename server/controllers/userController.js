@@ -84,9 +84,9 @@ const userController = {
     },
     refresh: async ({ cookies }, res) => {
         const { refreshToken } = cookies;
-        if (!refreshToken) return res.status(401).send({ message: 'Not Authenticated' });
+        if (!refreshToken) return res.status(401).send({ success: false, message: 'Not Authenticated' });
         const tokenExists = await RefreshToken.findOne({ where: { refreshToken } });
-        if (!tokenExists) return res.status(403).send({ message: "Refresh Token is not valid" });
+        if (!tokenExists) return res.status(403).send({ success: false, message: "Refresh Token is not valid" });
         jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err, user) => {
             if (err) {
                 console.log(err);
