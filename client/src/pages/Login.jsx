@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
-import { GoogleLogin } from 'react-google-login';
+import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 import { refreshToken } from "../utils/auth";
 import { MainContainer, InputContainer, ButtonContainer, IconContainer } from "../styles/Containers";
 import Input from "../components/Input";
@@ -35,10 +35,9 @@ const Login = (props) => {
     useEffect(() => {
         let loading = true;
         if (loading) {
-            console.log("Loading...");
             const persistLogin = async () => {
                 try {
-                     await refreshToken(user, setUser, setError);
+                    await refreshToken(user, setUser, setError);
                 } catch (err) {
                     console.log(err);
                 }
@@ -51,7 +50,7 @@ const Login = (props) => {
 
     }, [])
 
-    const submit = async () => {
+    const submit = async (info) => {
         if (email && password) {
             const response = await axios.post("http://localhost:8080/user/login", { email, password });
             setUser(response.data);
@@ -81,6 +80,17 @@ const Login = (props) => {
         };
     };
 
+    const loginWithGoogle = useGoogleLogin({
+        onSuccess: async data => {
+            const response = await axios.post("http://localhost:3000/user/google-login", {
+                token: data.access_token
+            });
+            setUser(response.data);
+
+        },
+        onError: err => console.log(err)
+    })
+
     return (
         <MainContainer>
             <WelcomeText>Welcome</WelcomeText>
@@ -95,12 +105,25 @@ const Login = (props) => {
             <LoginWith>or Login With</LoginWith>
             <Hr />
             <IconContainer>
-
-                <Icon />
+                <Icon>
+                    <button style={{
+                        width: '3.5rem',
+                        height: '3.5rem',
+                        border: 'none',
+                        background: 'none',
+                        cursor: 'pointer'
+                    }} onClick={() => loginWithGoogle()}></button>
+                </Icon>
             </IconContainer>
             <ForgotPassword>Forgot password ?</ForgotPassword>
             {user && <div>
-                {JSON.stringify(user, null, 2)}
+                {
+                    <div>
+                        <p style={{display: 'block'}}>{user.email}</p>
+                        <p style={{display: 'block'}}>{user.id}</p>
+                        <p style={{display: 'block'}}>{user.accessToken}</p>
+                    </div>
+                }
             </div>}
             <Button submit={logout} content={"Log out"} />
         </MainContainer>

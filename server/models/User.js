@@ -1,4 +1,4 @@
-const { Model, INTEGER, STRING } = require('sequelize');
+const { Model, INTEGER, STRING, BOOLEAN } = require('sequelize');
 const sequelize = require('../config/connection');
 const bcrypt = require('bcrypt');
 
@@ -29,17 +29,23 @@ User.init(
 
         password: {
             type: STRING,
-            allowNull: false,
+            allowNull: true,
             validate: {
                 len: [6]
             }
         },
+        isGoogleAccount: {
+            type: BOOLEAN,
+            defaultValue: false
+        }
 
     },
     {
         hooks: {
             beforeCreate: async (userData) => {
-                userData.password =  await bcrypt.hash(userData.password, 10);
+                if (userData.password) {
+                    userData.password =  await bcrypt.hash(userData.password, 10);
+                }
                 return userData;
             }
         },

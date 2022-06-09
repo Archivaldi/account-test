@@ -1,8 +1,35 @@
 const { User, RefreshToken } = require("../models");
 const jwt = require("jsonwebtoken");
+const { OAuth2Client } = require("google-auth-library");
 const generateToken = require("../utils/generateToken");
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const userController = {
+    googleLogin: async ({ body, res }) => {
+        const { token } = body;
+        try {
+            const { email } = await client.getTokenInfo(token);
+            let user = await User.findOne({ where: { email } });
+            if (!user) {
+                user = await User.create({email, isGoogleAccount: true});
+            }
+            const accessToken = generateToken(user, 'access');
+            const refreshToken = generateToken(user, 'refresh');
+            await RefreshToken.create({ refreshToken });
+            const cookieOptions = { httpOnly: true, expires: new Date(Date.now() + 24 * 60 * 60 * 1000) };
+            res
+                .status(200)
+                .cookie('refreshToken', refreshToken, cookieOptions)
+                .send({
+                    success: true,
+                    accessToken,
+                    user
+                });
+        } catch (err) {
+            console.log(err);
+        }
+    },
+
     login: async ({ body }, res) => {
         const { email, password } = body;
         const user = await User.findOne({ where: { email } });
@@ -49,7 +76,6 @@ const userController = {
                 .send({
                     success: true,
                     accessToken,
-                    refreshToken,
                     user
                 });
         } catch (err) {
@@ -95,9 +121,9 @@ const userController = {
         res
             .status(200)
             .clearCookie("refreshToken")
-            .send({ 
+            .send({
                 success: true,
-                message: "Logged out successfully" 
+                message: "Logged out successfully"
             });
     },
 
