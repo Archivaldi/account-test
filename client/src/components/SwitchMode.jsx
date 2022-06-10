@@ -2,14 +2,20 @@ import React from "react";
 import Button from "./Button";
 import styled from "styled-components";
 
-const SwitchMode = ({ mode, setMode, submit }) => {
+const SwitchMode = ({ mode, setMode, submit, setError }) => {
+
+    const reset = () => {
+        setMode(mode === "login" ? "signup" : 'login');
+        setError('');
+    };
+
     return (
         <CustomSwitch>
             <ButtonConteiner>
                 <Button  submit={submit} content={mode === 'login' ? "Login" : "Sign Up"} />
             </ButtonConteiner>
             <ButtonConteiner>
-                <button onClick={() => setMode(mode === "login" ? "signup" : 'login')} style={{
+                <button onClick={reset} style={{
                     width: '100%',
                     border: '1px solid #345901',
                     color: 'white',

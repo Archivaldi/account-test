@@ -1,0 +1,8 @@
+@keyframes error {
+    0% {
+        margin: 3rem 0 2rem 2rem;
+    } 
+    100% {
+        margin: 3rem 0 2rem 0;
+    }
+};

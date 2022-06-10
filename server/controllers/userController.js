@@ -44,7 +44,7 @@ const userController = {
         if (!user) {
             res.status(404).send({
                 success: false,
-                message: "Invalid email"
+                error: "Email is not found"
             });
             return;
         }
@@ -87,8 +87,11 @@ const userController = {
                     user
                 });
         } catch (err) {
-            console.log(err);
-            res.status(500).send({ message: "Something went wrong" });
+            if (err.parent.errno === 1062) {
+                res.status(500).send({ error: "The account with this email already exists" });
+                return;
+            }
+            res.status(500).send({ error: "Something went wrong" });
         }
     },
     refresh: async ({ cookies }, res) => {

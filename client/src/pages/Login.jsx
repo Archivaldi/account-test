@@ -8,6 +8,8 @@ import { Hr, LoginWith, WelcomeText, ForgotPassword } from "../styles/Helpers";
 import SwitchMode from "../components/SwitchMode";
 import UserContext from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
+import Error from "../components/Error";
+import validator from 'validator';
 
 
 axios.defaults.withCredentials = true;
@@ -25,96 +27,113 @@ const Login = (props) => {
 
     const submit = async (info) => {
         try {
-            if (mode === 'login') {
-                if (email && password) {
-                    const response = await axios.post("http://localhost:8080/user/login", { email, password });
-                    setValue(response.data);
-                    navigate("/");
-                } else {
-                    console.log("Email and Password are required to log in")
-                    setError("Email and Password are required to log in");
-                }
-            } else {
-                if (email && password && name && avatar) {
+            const isValidEmail = validator.isEmail(email);
+            if (isValidEmail && password.length > 8) {
+                    if (mode === 'login') {
+                        if (email && password) {
+                            const isValidEmail = validator.isEmail(email);
 
-                    const formData = new FormData();
-                    formData.append('file', avatar);
-                    formData.append("name", avatar.name);
-                    const response = await axios.post("http://localhost:8080/user/signup", {email, password, name});
-                    const id = response.data.user.id;
-                    const pictureResponse = await axios.post(`http://localhost:8080/user/upload-picture?id=${id}`, formData, {headers: { 'Content-Type': 'multipart/form-data' }} );
-                    const {picture} = pictureResponse.data;
-                    const newUser = {
-                        access_token: response.data.access_token,
-                        user: {
-                            id,
-                            email: response.data.user.email,
-                            name: response.data.user.name,
-                            picture
+                            try {
+                                const response = await axios.post("http://localhost:8080/user/login", { email, password });
+                                setValue(response.data);
+                                navigate("/");
+                            } catch (e) {
+                                console.log(e.response.data.error);
+                                setError(e.response.data.error);
+                            }
+                        } else {
+                            console.log("Email and Password are required to log in")
+                            setError("Email and Password are required to log in");
                         }
-                    };
-                    
-                    setValue(newUser);
-                    navigate("/");
+                    } else {
+                        console.log(email, password, name, avatar);
+                        if (email && password && name && avatar) {
+
+                            const formData = new FormData();
+                            formData.append('file', avatar);
+                            formData.append("name", avatar.name);
+                            const response = await axios.post("http://localhost:8080/user/signup", { email, password, name });
+                            const id = response.data.user.id;
+                            const pictureResponse = await axios.post(`http://localhost:8080/user/upload-picture?id=${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+                            const { picture } = pictureResponse.data;
+                            const newUser = {
+                                access_token: response.data.access_token,
+                                user: {
+                                    id,
+                                    email: response.data.user.email,
+                                    name: response.data.user.name,
+                                    picture
+                                }
+                            };
+
+                            setValue(newUser);
+                            navigate("/");
+                        } else {
+                            setError("Please fill out all fields");
+                        }
+                    }
                 } else {
-                    setError("Please fill out all fields");
+                    isValidEmail ? setError("The password should be at least 8 characters long") : setError("Please provide a valid Email");
                 }
-            }
-        } catch (e) {
-            setError(e.response.data.error);
+            } catch (e) {
+                setError(e.response.data.error);
+            };
         };
+
+        const loginWithGoogle = useGoogleLogin({
+            onSuccess: async (data) => {
+                const response = await axios.post("http://localhost:3000/user/google-login", {
+                    token: data.access_token
+                });
+                console.log(response.data);
+                setValue(response.data);
+                navigate("/");
+            },
+            onError: err => console.log(err)
+        });
+
+
+        return (
+            <MainContainer>
+                {
+                    error ?
+                        <Error message={error} />
+                        : <WelcomeText>Welcome</WelcomeText>
+                }
+                {
+                    mode === "login" ? (
+                        <InputContainer>
+                            <Input setError={setError} setEmail={setEmail} value={email} id="email" type="text" placeholder="Email" />
+                            <Input setError={setError} setPassword={setPassword} value={password} id="password" type="password" placeholder="Password" />
+                        </InputContainer>
+                    ) : (
+                        <InputContainer style={{ height: "33%" }}>
+                            <Input setEmail={setEmail} setError={setError} value={email} id="email" type="text" placeholder="Email" />
+                            <Input setPassword={setPassword} setError={setError} value={password} id="password" type="password" placeholder="Password" />
+                            <Input setName={setName} setError={setError} value={name} id="name" type="text" placeholder="Full Name" />
+                            <Input setAvatar={setAvatar} setError={setError} id="file" type="file" placeholder="Choose Avatar" />
+                        </InputContainer>
+                    )
+                }
+                <ButtonContainer>
+                    <SwitchMode mode={mode} setError={setError} setMode={setMode} submit={submit} />
+                </ButtonContainer>
+                <LoginWith>or {mode === "login" ? "Login" : "Sign Up"} With</LoginWith>
+                <Hr />
+                <IconContainer>
+                    <Icon>
+                        <button style={{
+                            width: '3.5rem',
+                            height: '3.5rem',
+                            border: 'none',
+                            background: 'none',
+                            cursor: 'pointer'
+                        }} onClick={() => loginWithGoogle()}></button>
+                    </Icon>
+                </IconContainer>
+                <ForgotPassword>Forgot password ?</ForgotPassword>
+            </MainContainer>
+        );
     };
 
-    const loginWithGoogle = useGoogleLogin({
-        onSuccess: async (data) => {
-            const response = await axios.post("http://localhost:3000/user/google-login", {
-                token: data.access_token
-            });
-            console.log(response.data);
-            setValue(response.data);
-            navigate("/");
-        },
-        onError: err => console.log(err)
-    });
-
-
-    return (
-        <MainContainer>
-            <WelcomeText>Welcome</WelcomeText>
-            {
-                mode === "login" ? (
-                    <InputContainer>
-                        <Input setEmail={setEmail} value={email} id="email" type="text" placeholder="Email" />
-                        <Input setPassword={setPassword} value={password} id="password" type="password" placeholder="Password" />
-                    </InputContainer>
-                ) : (
-                    <InputContainer style={{ height: "33%" }}>
-                        <Input setEmail={setEmail} value={email} id="email" type="text" placeholder="Email" />
-                        <Input setPassword={setPassword} value={password} id="password" type="password" placeholder="Password" />
-                        <Input setName={setName} value={name} id="name" type="text" placeholder="Full Name" />
-                        <Input setAvatar={setAvatar} id="file" type="file" placeholder="Choose Avatar" />
-                    </InputContainer>
-                )
-            }
-            <ButtonContainer>
-                <SwitchMode mode={mode} setMode={setMode} submit={submit} />
-            </ButtonContainer>
-            <LoginWith>or {mode === "login" ? "Login" : "Sign Up"} With</LoginWith>
-            <Hr />
-            <IconContainer>
-                <Icon>
-                    <button style={{
-                        width: '3.5rem',
-                        height: '3.5rem',
-                        border: 'none',
-                        background: 'none',
-                        cursor: 'pointer'
-                    }} onClick={() => loginWithGoogle()}></button>
-                </Icon>
-            </IconContainer>
-            <ForgotPassword>Forgot password ?</ForgotPassword>
-        </MainContainer>
-    );
-};
-
-export default Login;
+    export default Login;

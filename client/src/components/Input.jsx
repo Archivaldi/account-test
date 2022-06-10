@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
-const Input = ({setEmail, setPassword, setName, type, placeholder, setAvatar, id }) => {
+const Input = ({setEmail, setPassword, setName, type, placeholder, setAvatar, id, setError }) => {
     const handleChange = (e) => {
+        setError("");
         const value = e.target.value;
         if (id === 'email') {
             setEmail(value);
