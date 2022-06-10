@@ -29,6 +29,19 @@ export const MainContainer = styled.div`
         h4 {
             font-size: small;
         }
+
+        .inputContainer {
+            height: 35%;
+        }
+
+        .mode {
+            flex-direction: column;
+        }
+
+        #btn {
+            width: 100%;
+            margin: 0.5rem 0;
+        }
     }
 
     @media only screen and (min-width: 321px) {
@@ -38,6 +51,19 @@ export const MainContainer = styled.div`
 
         h4 {
             font-size: small;
+        }
+
+        .inputContainer {
+            height: 35%;
+        }
+
+        .mode {
+            flex-direction: column;
+        }
+
+        #btn {
+            width: 100%;
+            margin: 0.5rem 0;
         }
     }
 
@@ -49,6 +75,15 @@ export const MainContainer = styled.div`
     @media only screen and (min-width: 470px) {
         width: 80vw;
         height: 95vh;
+
+        .mode {
+            flex-direction: row;
+        }
+
+        #btn {
+            width: 45%;
+            margin: 1rem;
+        }
     }
 
     @media only screen and (min-width: 611px) {

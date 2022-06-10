@@ -107,7 +107,7 @@ const Login = (props) => {
                             <Input setError={setError} setPassword={setPassword} value={password} id="password" type="password" placeholder="Password" />
                         </InputContainer>
                     ) : (
-                        <InputContainer style={{ height: "33%" }}>
+                        <InputContainer className="inputContainer">
                             <Input setEmail={setEmail} setError={setError} value={email} id="email" type="text" placeholder="Email" />
                             <Input setPassword={setPassword} setError={setError} value={password} id="password" type="password" placeholder="Password" />
                             <Input setName={setName} setError={setError} value={name} id="name" type="text" placeholder="Full Name" />
@@ -131,7 +131,7 @@ const Login = (props) => {
                         }} onClick={() => loginWithGoogle()}></button>
                     </Icon>
                 </IconContainer>
-                <ForgotPassword>Forgot password ?</ForgotPassword>
+                <ForgotPassword onClick={() => {setError("This feature was not implemented yet")}}>Forgot password ?</ForgotPassword>
             </MainContainer>
         );
     };

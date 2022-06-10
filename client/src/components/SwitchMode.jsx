@@ -10,11 +10,11 @@ const SwitchMode = ({ mode, setMode, submit, setError }) => {
     };
 
     return (
-        <CustomSwitch>
-            <ButtonConteiner>
+        <CustomSwitch className="mode">
+            <ButtonConteiner id="btn">
                 <Button  submit={submit} content={mode === 'login' ? "Login" : "Sign Up"} />
             </ButtonConteiner>
-            <ButtonConteiner>
+            <ButtonConteiner id="btn">
                 <button onClick={reset} style={{
                     width: '100%',
                     border: '1px solid #345901',
