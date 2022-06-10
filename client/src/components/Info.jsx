@@ -3,10 +3,11 @@ import { ButtonContainer, InfoContainer } from "../styles/Containers";
 import { WelcomeText, ForgotPassword } from "../styles/Helpers";
 import Button from "./Button";
 
-const Info = ({ name, logout }) => {
+const Info = ({ name, logout, email }) => {
     return (
         <InfoContainer className="infoContainer">
             <WelcomeText className="name" style={{ marginBottom: 0 }}>{name}</WelcomeText>
+            <WelcomeText className="email" style={{ marginBottom: 0 }}>{email}</WelcomeText>
             <div className="about" style={{
                 width: '90%'
             }}>
@@ -20,7 +21,7 @@ const Info = ({ name, logout }) => {
                     more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
             </div>
             <ButtonContainer>
-                <Button className="logout" submit={logout} content="Log Out"></Button>
+                <Button submit={logout} content="Log Out"></Button>
             </ButtonContainer>
         </InfoContainer>
     );

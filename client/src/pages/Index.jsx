@@ -75,7 +75,7 @@ const Index = () => {
         return (
             <IndexConteiner>
                 <Image imageUrl={value.user.picture} />
-                <Info logout={logout} name={value.user.name} />
+                <Info logout={logout} name={value.user.name} email={value.user.email} />
             </IndexConteiner>
         )
     } else {
