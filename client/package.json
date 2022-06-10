@@ -1,6 +1,7 @@
 {
   "name": "client",
   "version": "0.1.0",
+  "proxy": "http://localhost:8080/",
   "private": true,
   "dependencies": {
     "@react-oauth/google": "^0.2.6",
@@ -25,10 +26,7 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "extends": "react-app"
   },
   "browserslist": {
     "production": [
@@ -41,6 +39,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "proxy": "http://localhost:8080/"
+  }
 }
