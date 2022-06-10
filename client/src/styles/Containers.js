@@ -132,6 +132,8 @@ export const IndexConteiner = styled.div`
     flex-direction: row;
     width: 80vw;
     height: 80vh;
+    animation-name: form;
+    animation-duration: 1s;
 
     @media only screen and (max-width: 320px) {
         flex-direction: column; 
