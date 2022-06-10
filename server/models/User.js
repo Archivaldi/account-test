@@ -39,8 +39,7 @@ User.init(
             allowNull: false
         },
         picture: {
-            type: TEXT,
-            allowNull: false
+            type: TEXT
         }
         
 

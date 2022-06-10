@@ -3,17 +3,19 @@ const jwt = require("jsonwebtoken");
 const generateToken = require("../utils/generateToken");
 const axios = require("axios");
 const cloudinary = require('cloudinary').v2;
-
+const keys = require("../config/keys");
+const path = require("path");
+cloudinary.config({ cloud_name: keys.cloud_name, api_key: keys.apikey, api_secret: keys.secret });
 
 const userController = {
     googleLogin: async ({ body, res }) => {
         const { token } = body;
         try {
             const userInfo = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${token}`);
-            const {email, name, picture} = userInfo.data;
-            let user = await User.findOne({ where: { email, picture, name } });
+            const { email, name, picture } = userInfo.data;
+            let user = await User.findOne({ where: { email } });
             if (!user) {
-                user = await User.create({email, name, picture});
+                user = await User.create({ email, name, picture });
             }
             const accessToken = generateToken(user, 'access');
             const refreshToken = generateToken(user, 'refresh');
@@ -67,12 +69,10 @@ const userController = {
                 user
             });
     },
-    signup: async ({ body, files }, res) => {
+    signup: async ({ body }, res) => {
         try {
             const { email, password, name } = body;
-            console.log(body);
-            console.log(files);
-            const user = await User.create({ email, password, name, avatar });
+            const user = await User.create({ email, password, name });
             const accessToken = generateToken(user, 'access');
             const refreshToken = generateToken(user, 'refresh');
             await RefreshToken.create({ refreshToken });
@@ -87,6 +87,7 @@ const userController = {
                     user
                 });
         } catch (err) {
+            console.log(err);
             res.status(500).send({ message: "Something went wrong" });
         }
     },
@@ -121,6 +122,27 @@ const userController = {
                     user
                 });
         });
+    },
+
+    uploadPicture: async ({ files, query }, res) => {
+        const { file } = files;
+        const {id} = query;
+        try {
+            await file.mv(path.join(__dirname, `../Upload/${file.name}`));
+            const { secure_url } = await cloudinary.uploader.upload(path.join(__dirname, `../Upload/${file.name}`));
+            await User.update({ picture: secure_url }, {where: {id }});
+            res.status(200).send({
+                success:true,
+                picture: secure_url
+            });
+            return;
+        } catch (e) {
+            console.log(e);
+            res.status(500).send({
+                success: false,
+                error: "Something went wrong"
+            })
+        };
     },
 
     logout: async ({ cookies }, res) => {
