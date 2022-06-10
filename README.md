@@ -6,7 +6,15 @@
 
 ----------------
 
-Full-Stack Nodejs/React App that allows the user to SignIn/LogIn with email/google account
+Full-Stack Nodejs/React App that allows the user to SignIn/LogIn with email/google account: 
+- jwt access token is vallid for 10 seconds
+- jwt refresh token is set and passed through cookie with "httpOnly" flag which makes it unaccessible by the browser. The refresh token is valid for 24 hours
+- the access token is refreshed automatically by axios interceptions which makes the login to be persisted after the page was closed or reloaded
+- the email and password are validated on the client side and on the server side by the database
+- the ui is responsive for all screen sizes
+- you can use Google Account to sign up and log in
+- heroku doesn't allow to upload pictures on the server. The cloudinary api was used for that matter
+- the password is saved in the database as a encrypted hash created by bcrypt npm package
 
 ## Technologies used:
 
