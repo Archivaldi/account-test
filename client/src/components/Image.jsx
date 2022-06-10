@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const Image = ({imageUrl}) => {
-    return <ImageConteiner imageUrl={imageUrl} />
+    return <ImageConteiner className="imageContainer"  imageUrl={imageUrl} />
 };
 
 const ImageConteiner = styled.div`

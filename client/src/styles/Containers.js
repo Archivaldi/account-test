@@ -97,11 +97,99 @@ export const IndexConteiner = styled.div`
     flex-direction: row;
     width: 80vw;
     height: 80vh;
+
+    @media only screen and (max-width: 320px) {
+        flex-direction: column; 
+        width: 95vw;
+        height: 95vh;
+        align-items: center;
+
+        .imageContainer {
+            width: 100%;
+        }
+
+        .infoContainer {
+            width: 100%;
+        }
+
+        .about {
+            text-align: center;
+        }
+    };
+
+    @media only screen and (min-width: 321px) {
+        flex-direction: column; 
+        width: 95vw;
+        height: 95vh;
+        align-items: center;
+
+        .imageContainer {
+            width: 100%;
+        }
+
+        .infoContainer {
+            width: 100%;
+        }
+
+        .about {
+            text-align: center;
+        }
+    };
+
+    @media only screen and (min-width: 371px) {
+        width: 95vw;
+        height: 95vh;
+
+        .imageContainer {
+            width: 90%;
+            height: 35%;
+        }
+    };
+
+    @media only screen and (min-width: 471px) {
+        width: 90vw;
+        height: 95vh;
+
+        .imageContainer {
+            width: 80%;
+            height: 35%;
+        }
+    };
+
+    @media only screen and (min-width: 611px) {
+        width: 80vw;
+        height: 80vh;
+        flex-direction: row; 
+        align-items: start;
+
+        .imageContainer {
+            width: 45%;
+        }
+
+        .infoContainer {
+            width: 55%;
+        }
+
+        .name {
+            margin: 0;
+        }
+
+    }
+
+    @media only screen and (min-width: 860px) {
+        .imageContainer {
+            height: 40vh;
+        }
+    }
+
+
 `;
 
 export const InfoContainer = styled.div`
-    width: 45%;  
+    width: 45%;
+    height: 50%;  
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
 `;
