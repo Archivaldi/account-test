@@ -2,7 +2,7 @@
 const apiController = {
     test: (req, res) => {
         res.send({
-            message: "Hello world"
+            message: "Testing"
         })
     }
 };

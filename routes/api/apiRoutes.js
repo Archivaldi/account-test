@@ -3,6 +3,6 @@ const { apiController } = require("../../controllers");
 
 const { test } = apiController
 
-router.route("/").get(test);
+router.route("/test").get(test);
 
 module.exports = router;
