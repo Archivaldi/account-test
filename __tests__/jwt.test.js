@@ -13,10 +13,9 @@ describe('Testing the process generating token', () => {
         })
     });
 
-    test("(2) Should return error", () => {
+    test("(2) Should return error message", () => {
         const refreshToken = generateToken(data.test1, "refresh", true);
         jwt.verify(refreshToken, "TokenSecret", async (err, user) => {
-
             expect(err.message).toBe('invalid signature');
         })
     })

@@ -42,7 +42,7 @@ Full-Stack Nodejs/React App that allows the user to SignIn/LogIn with email/goog
 - CLOUD_APIKEY (Cloudinary API)
 - CLOUD_SECRET (Cloudinary API)
 
-5. create ***.env.local*** file and create the following variable: 
+5. in client directory create ***.env.local*** file and create the following variable: 
 - REACT_APP_GOOGLE_CLIENT_ID (Google API) (The same value as previos GOOGLE_CLIENT_ID)
 
 6. in the root folder run ***npm start***
