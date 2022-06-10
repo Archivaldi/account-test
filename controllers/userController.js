@@ -131,8 +131,8 @@ const userController = {
         const { file } = files;
         const {id} = query;
         try {
-            await file.mv(path.join(__dirname, `../Upload/${file.name}`));
-            const { secure_url } = await cloudinary.uploader.upload(path.join(__dirname, `../Upload/${file.name}`));
+            await file.mv(path.join(__dirname, `/Upload/${file.name}`));
+            const { secure_url } = await cloudinary.uploader.upload(path.join(__dirname, `/Upload/${file.name}`));
             await User.update({ picture: secure_url }, {where: {id }});
             res.status(200).send({
                 success:true,
