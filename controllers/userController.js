@@ -44,7 +44,7 @@ const userController = {
         if (!user) {
             res.status(404).send({
                 success: false,
-                error: "Email is not found"
+                "error": "Email is not found"
             });
             return;
         }

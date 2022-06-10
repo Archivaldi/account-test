@@ -38,8 +38,6 @@ const Login = (props) => {
                                 setValue(response.data);
                                 navigate("/");
                             } catch (e) {
-                                console.log(e);
-                                console.log(e.response.data.error);
                                 setError(e.response.data.error);
                             }
                         } else {
