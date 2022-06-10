@@ -82,7 +82,7 @@ const Login = (props) => {
 
         const loginWithGoogle = useGoogleLogin({
             onSuccess: async (data) => {
-                const response = await axios.post("http://localhost:3000/user/google-login", {
+                const response = await axios.post("/user/google-login", {
                     token: data.access_token
                 });
                 console.log(response.data);
