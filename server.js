@@ -18,8 +18,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(headers);
 app.use(cookieParser());
-app.use(upload())
-app.use(router);
+app.use(upload());
+app.use(router); 
 
 if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, "./client/build")))
