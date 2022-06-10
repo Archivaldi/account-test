@@ -1,8 +1,17 @@
 @keyframes error {
     0% {
-        margin: 3rem 0 2rem 2rem;
+        transform: translateX(-1.5rem)
     } 
     100% {
-        margin: 3rem 0 2rem 0;
+        transform: translateX(0)
     }
-};
+}
+
+@keyframes form {
+    0% {
+        transform: translateY(-2rem)
+    } 
+    100% {
+        transform: translateY(0)
+    }
+}

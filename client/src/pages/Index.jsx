@@ -5,16 +5,19 @@ import { refreshToken } from "../utils/auth";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import Button from "../components/Button";
+import { IndexConteiner } from "../styles/Containers";
+import Image from "../components/Image";
+import Info from "../components/Info";
 
 axios.defaults.withCredentials = true;
 
 
-const Index = (props) => {
+const Index = () => {
 
     const { value, setValue } = useContext(UserContext);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    console.log(value);
 
     const axiosJWT = axios.create();
 
@@ -34,25 +37,21 @@ const Index = (props) => {
         }
     );
 
-    useEffect(() => {
-        let loading = true;
-        if (loading) {
-            const persistLogin = async () => {
-                try {
-                    const response = await refreshToken(setValue, setError);
-                    if (!response.success) {
-                        navigate("/login");
-                    };
-                } catch (err) {
-                    console.log(err);
-                }
+    const persistLogin = async () => {
+        try {
+            setLoading(true);
+            const response = await refreshToken(setValue, setError);
+            if (!response.success) {
+                navigate("/login");
             };
-            persistLogin();
-        };
-        return () => {
-            loading = false;
+            setLoading(false)
+        } catch (err) {
+            console.log(err);
         }
+    };
 
+    useEffect(() => {
+        persistLogin();
     }, []);
 
     const logout = async () => {
@@ -68,11 +67,20 @@ const Index = (props) => {
         };
     };
 
-    return (
-        <div>
-            <Button content="Log Out" submit={logout} />
-        </div>
-    )
+    if (loading) {
+        return (
+            <div>Loading...</div>
+        )
+    } else if (value) {
+        return (
+            <IndexConteiner>
+                <Image imageUrl={value.user.picture} />
+                <Info logout={logout} name={value.user.name} />
+            </IndexConteiner>
+        )
+    } else {
+        return <IndexConteiner />
+    }
 };
 
 export default Index;

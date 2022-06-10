@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import "./animation.css";
 
 export const MainContainer = styled.div`
     display: flex;
@@ -13,6 +14,8 @@ export const MainContainer = styled.div`
     color: #ffffff;
     text-transform: uppercase;
     letter-spacing: 0.4rem;
+    animation-name: form;
+    animation-duration: 1s;
 
     @media only screen and (max-width: 320px) {
         width: 80vw;
@@ -87,4 +90,18 @@ export const IconContainer = styled.div`
     justify-content: space-evenly;
     margin: 2rem 0 3rem 0;
     width: 80%;
+`;
+
+export const IndexConteiner = styled.div`
+    display: flex;
+    flex-direction: row;
+    width: 80vw;
+    height: 80vh;
+`;
+
+export const InfoContainer = styled.div`
+    width: 45%;  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 `;
