@@ -73,17 +73,11 @@ const userController = {
         try {
             const { email, password, name } = body;
             const user = await User.create({ email, password, name });
-            const accessToken = generateToken(user, 'access');
-            const refreshToken = generateToken(user, 'refresh');
-            await RefreshToken.create({ refreshToken });
-            const cookieOptions = { httpOnly: true, expires: new Date(Date.now() + 24 * 60 * 60 * 1000) };
 
             res
                 .status(200)
-                .cookie('refreshToken', refreshToken, cookieOptions)
                 .send({
                     success: true,
-                    accessToken,
                     user
                 });
         } catch (err) {
@@ -129,14 +123,24 @@ const userController = {
 
     uploadPicture: async ({ files, query }, res) => {
         const { file } = files;
-        const {id} = query;
+        const { id } = query;
         try {
-            await file.mv(path.join(__dirname, `./utils/Upload/${file.name}`));
-            const { secure_url } = await cloudinary.uploader.upload(path.join(__dirname, `./utils/Upload/${file.name}`));
-            await User.update({ picture: secure_url }, {where: {id }});
-            res.status(200).send({
-                success:true,
-                picture: secure_url
+            await file.mv(path.join(__dirname, `../utils/Upload/${file.name}`));
+            const { secure_url } = await cloudinary.uploader.upload(path.join(__dirname, `../utils/Upload/${file.name}`));
+            await User.update({ picture: secure_url }, { where: { id }, returning: true, plain: true });
+            const user = await User.findOne({where: {id}})
+            const accessToken = generateToken(user, 'access');
+            const refreshToken = generateToken(user, 'refresh');
+            await RefreshToken.create({ refreshToken });
+            const cookieOptions = { httpOnly: true, expires: new Date(Date.now() + 24 * 60 * 60 * 1000) };
+            
+            res
+                .status(200)
+                .cookie('refreshToken', refreshToken, cookieOptions)
+                .send({
+                success: true,
+                accessToken,
+                user
             });
             return;
         } catch (e) {
