@@ -14,7 +14,7 @@ const Index = (props) => {
     const { value, setValue } = useContext(UserContext);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
-    console.log("The context now: ", value)
+    console.log(value);
 
     const axiosJWT = axios.create();
 

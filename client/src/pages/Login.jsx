@@ -40,10 +40,21 @@ const Login = (props) => {
                     const formData = new FormData();
                     formData.append('file', avatar);
                     formData.append("name", avatar.name);
-
-                    console.log(formData);
-                    const response = await axios.post("http://localhost:8080/user/signup", { email, password, name, formData });
-                    setValue(response.data);
+                    const response = await axios.post("http://localhost:8080/user/signup", {email, password, name});
+                    const id = response.data.user.id;
+                    const pictureResponse = await axios.post(`http://localhost:8080/user/upload-picture?id=${id}`, formData, {headers: { 'Content-Type': 'multipart/form-data' }} );
+                    const {picture} = pictureResponse.data;
+                    const newUser = {
+                        access_token: response.data.access_token,
+                        user: {
+                            id,
+                            email: response.data.user.email,
+                            name: response.data.user.name,
+                            picture
+                        }
+                    };
+                    
+                    setValue(newUser);
                     navigate("/");
                 } else {
                     setError("Please fill out all fields");
