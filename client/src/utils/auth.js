@@ -3,7 +3,7 @@ axios.defaults.withCredentials = true;
 
 export const refreshToken = async (setUser, setError) => {
     try {
-        const response = await axios.post("http://localhost:8080/user/refresh", { withCredentials: true });
+        const response = await axios.post("/user/refresh", { withCredentials: true });
             setUser({
                 accessToken: response.data.accessToken,
                 user: {

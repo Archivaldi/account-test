@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const cors = require('cors');
 const PORT = process.env.PORT || 8080;
 let upload = require('express-fileupload');
+const path = require('path');
 
 app.use(cors({
     credentials: true,
@@ -19,6 +20,15 @@ app.use(cookieParser());
 app.use(upload())
 app.use(router);
 
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, "./client/build")))
+};
+
+if (process.env.NODE_ENV === "production") {
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(__dirname, "./client/build/index.html"))
+    })
+};
 
 sequelize.sync({ force: false }).then(() => {
     app.listen(PORT, () => console.log(`Now listetning on port ${PORT}`))

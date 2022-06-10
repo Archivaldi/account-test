@@ -34,7 +34,7 @@ const Login = (props) => {
                             const isValidEmail = validator.isEmail(email);
 
                             try {
-                                const response = await axios.post("http://localhost:8080/user/login", { email, password });
+                                const response = await axios.post("/user/login", { email, password });
                                 setValue(response.data);
                                 navigate("/");
                             } catch (e) {
@@ -52,9 +52,9 @@ const Login = (props) => {
                             const formData = new FormData();
                             formData.append('file', avatar);
                             formData.append("name", avatar.name);
-                            const response = await axios.post("http://localhost:8080/user/signup", { email, password, name });
+                            const response = await axios.post("/user/signup", { email, password, name });
                             const id = response.data.user.id;
-                            const pictureResponse = await axios.post(`http://localhost:8080/user/upload-picture?id=${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+                            const pictureResponse = await axios.post(`/user/upload-picture?id=${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
                             const { picture } = pictureResponse.data;
                             const newUser = {
                                 access_token: response.data.access_token,

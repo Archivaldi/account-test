@@ -57,7 +57,7 @@ const Index = () => {
     const logout = async () => {
         try {
             if (value) {
-                const response = await axiosJWT.post("http://localhost:8080/user/logout");
+                const response = await axiosJWT.post("/user/logout");
                 setValue(null);
                 navigate("/login");
             }
