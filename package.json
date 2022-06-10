@@ -6,10 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "backend": "nodemon server.js",
-    "install":"cd client && npm install",
-    "frontend": "npm run start --prefix client",
-    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
-    "build": "cd client/ && npm install && npm run build"
+    "build": "cd client/ && npm run build"
   },
   "engines": {
     "node": "16.14.2"
