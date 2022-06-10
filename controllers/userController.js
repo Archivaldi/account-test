@@ -44,7 +44,7 @@ const userController = {
         if (!user) {
             res.status(404).send({
                 success: false,
-                "error": "Email is not found"
+                error: "Email is not found"
             });
             return;
         }
@@ -52,7 +52,7 @@ const userController = {
         if (!isValidPassword) {
             res.status(400).send({
                 success: false,
-                message: "Invalid password"
+                error: "Invalid password"
             });
             return;
         }
